@@ -84,16 +84,20 @@ After downloading do these steps for windows users...
 
 After the completion of this process open cmd from a video included folder and run the command  "ccextractor videoname.video_extension".After completing the task it says success or failure,if success, then it creates .SRT file and that SRT file contains the subtitle of this video. If it shows "No captions where found in the Input" then don't get panic because ccextractor works only with some videos only.
 
-### 7. Run Celery worker
+### 7. For Windows Users: WSL 2 Required for Redis
+For Windows users, this project requires Windows Subsystem for Linux 2 (WSL 2) because Redis, which is used for background task management, does not natively run on Windows. Redis is a key component of the project’s functionality, and WSL 2 provides a Linux environment that allows Redis to run seamlessly on a Windows system.
+
+### 8. Run Celery worker
 ```bash
 celery -A video_subtitle_app worker -P eventlet
 ```
 Celery is configured to handle background tasks like video processing, subtitle extraction, and potentially other time-consuming operations.
-### 8. Run the Development Server
+### 9. Run the Development Server
 ```bash
 python manage.py runserver
 ```
-Both 7 and 8 must be run simultaneously, so first run celery worker on a terminal and then take another terminal and run the development server.Because both must be run while dealing with this project.
+Both 8 and 9 must be run simultaneously, so first run celery worker on a terminal and then take another terminal and run the development server.Because both must be run while dealing with this project.
+
 
 ## How to Use
 ### 1. Uploading Videos

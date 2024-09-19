@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ video.title }}</title>
+</head>
+<body>
+    <h1>{{ video.title }}</h1>
+    <video controls>
+        <source src="{{ video.video_file.url }}" type="video/mp4">
+        <!-- Subtitle tracks for multi-language support -->
+        {% for subtitle in subtitles %}
+        <track kind="captions" src="{{ subtitle.subtitle_file.url }}" srclang="{{ subtitle.language }}" label="{{ subtitle.language }}">
+        {% endfor %}
+    </video>
+
+    <h2>Search Subtitles</h2>
+    <form method="GET" action="{% url 'search_subtitles' video.id %}">
+        <input type="text" name="q" placeholder="Search for a phrase">
+        <button type="submit">Search</button>
+    </form>
+
+    <div id="search-results">
+        <!-- Display search results dynamically -->
+    </div>
+
+    <script>
+        document.querySelector('form').onsubmit = function(event) {
+            event.preventDefault();
+            var query = document.querySelector('input[name="q"]').value;
+            fetch(`{% url 'search_subtitles' video.id %}?q=` + query)
+                .then(response => response.json())
+                .then(data => {
+                    var resultsDiv = document.getElementById('search-results');
+                    resultsDiv.innerHTML = '';
+                    data.results.forEach(result => {
+                        var resultDiv = document.createElement('div');
+                        resultDiv.innerHTML = `<strong>${result.language}</strong>: ${result.content} (at ${result.timestamp})`;
+                        resultsDiv.appendChild(resultDiv);
+                        
+                    });
+                });
+        };
+    </script>
+</body>
+</html>

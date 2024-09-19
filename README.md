@@ -86,7 +86,7 @@ After the completion of this process open cmd from a video included folder and r
 
 ### 7. Run Celery worker
 ```bash
-celery -A video_subtitle_app worker -p eventlet
+celery -A video_subtitle_app worker -P eventlet
 ```
 Celery is configured to handle background tasks like video processing, subtitle extraction, and potentially other time-consuming operations.
 ### 8. Run the Development Server
@@ -108,7 +108,18 @@ Both 7 and 8 must be run simultaneously, so first run celery worker on a termina
   (b). The system will return the matching phrases along with their timestamps.
   (c). Clicking on a timestamp will play the video from that specific point.
 
-*** After the video uploading completed and it doesn't generate the .SRT file then come to the celery run terminal then we can see that it is either success or failure. If failure occur it is problem associated with CCExtractor.Because CCExtractor works with only some of the videos. ***
+
+## Successful Subtitle Extraction
+In the successful case, CCExtractor was able to process the uploaded video and generate two .srt files:
+1. First .srt file: This file is located in the root of the media folder.This is 0 byte sized file which does not contain anything.
+2. Second .srt file: This file is located inside the media folder, within a subfolder named video, which contains both the uploaded video and the extracted .srt file.
+### File Structure:
+(a) /media
+(b) extracted_subtitle.srt (First .srt file)
+(c) /video
+       (1.) uploaded_video.mp4 (The original uploaded video)
+       (2.) extracted_subtitle.srt (Second .srt file, specific to the video)
+
 
 ## Most Challenging task
 Most challenging task that i faced while developing this project is the subtitle extraction with CCExtractor. I have spend more time to work with CCExtractor. Actually the problem is CCExtractor generates subtitle, with only some of the videos only. Another most challenging task is the runnig of celery worker, i have runned the celery worker with a different command that i mentioned here then it raises the error 'value not found error(expected 3 and got 0)' then i search this problem with may of the sites and friends and last i got that, download the python package eventlet and then run this command "celery -A video_subtitle_app worker -p eventlet" hence it works. Eventlet is a Python networking library that supports concurrency via green threads, which are lightweight, cooperative threads that allow you to manage concurrency without the overhead of traditional operating system threads. These are the most challenging tasks that was faced while developing this project.
